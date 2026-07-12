@@ -23,7 +23,7 @@ Run these from the repo root:
 ```bash
 python -m unittest discover -s tests
 python -m auva_demo.cli --case data/synthetic_cases.jsonl
-rg -n "GOLEM|Nightstalker|Ravenmother|Hoodoo|Holy Mountain|Rue|gmail|shopify|secret|password|customer@|@gmail|sqlite|\\.db|real_support|Northstar|gwu1w1|hoodoomoses" .
+rg -n "GOLEM|Nightstalker|Ravenmother|Hoodoo|Holy Mountain|Rue|gmail|shopify|secret|password|customer@|@gmail|sqlite|\\.db|real_support|Northstar|gwu1w1|hoodoomoses" . --glob '!docs/github_publish.md'
 ```
 
 The `rg` command should return no matches. A no-match exit code is expected.
