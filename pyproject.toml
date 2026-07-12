@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auva-ai-commerce-ops-demo"
+version = "0.1.0"
+description = "Public-safe AUVA portfolio scaffold for AI-assisted commerce operations."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Moses Shenassa" }]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Office/Business",
+  "Topic :: Software Development :: Libraries :: Application Frameworks"
+]
+
+[project.scripts]
+auva-demo = "auva_demo.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["auva_demo*"]
