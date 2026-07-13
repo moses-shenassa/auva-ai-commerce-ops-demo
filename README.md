@@ -1,5 +1,7 @@
 # AUVA AI Commerce Ops Demo
 
+[![CI](https://github.com/moses-shenassa/auva-ai-commerce-ops-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/moses-shenassa/auva-ai-commerce-ops-demo/actions/workflows/ci.yml)
+
 AUVA is a public-safe portfolio scaffold for an AI-assisted commerce operations assistant.
 
 This repository is not the private production workspace. It is a sanitized demo that shows the product architecture and implementation style behind AUVA without exposing customer records, merchant data, credentials, private databases, or internal operating artifacts.
