@@ -28,6 +28,20 @@ The key idea is not "AI writes emails." The key idea is a supervised operating l
 
 This version includes a live OpenAI classification path when `OPENAI_API_KEY` is present, with deterministic offline fallback so the repo can still run anywhere during an interview. The business action and approval gates remain deterministic by design, so AI interpretation cannot silently auto-approve refunds, replacements, or risky fulfillment changes.
 
+## Full Project Description
+
+AUVA is a public-safe portfolio version of a commerce operations assistant built to show how AI can support real business workflows without removing human judgment from sensitive decisions.
+
+The project models a post-purchase support triage system for an e-commerce merchant. It takes synthetic customer messages and order context, assembles a structured context bundle, classifies the support intent with an optional OpenAI-backed AI layer, checks the case against policy and operational risk, recommends the next business action, assigns a human-review approval tier, and produces an operator-facing note plus a draft customer reply.
+
+The important design choice is the separation between AI interpretation and business control. The AI layer can help interpret messy customer language, but it does not directly approve refunds, replacements, address changes, or other fulfillment-risk actions. Those decisions stay inside deterministic policy code so the workflow remains testable, auditable, and safe to run in a supervised operations environment.
+
+The public demo uses only synthetic data. It contains no real customer records, merchant data, private emails, credentials, databases, or internal production artifacts. It is intentionally small enough to run live in an interview, while still showing the operating pattern behind a larger AI-enabled support system: context assembly, intent classification, guardrails, approval routing, evaluation, documentation, and CI/CD.
+
+The repo includes a no-argument interview demo, a command-line workflow runner, unit tests, a synthetic evaluation scoreboard, GitHub Actions CI, and documentation explaining the architecture, safety boundary, AI integration, evaluation approach, and interview positioning.
+
+In practical terms, AUVA demonstrates how to move from a vague "AI assistant" idea into a concrete implementation pattern: define the workflow, isolate the AI decision boundary, keep risky actions under human review, test expected behavior, and make the system understandable to both technical and operational stakeholders.
+
 ## Why This Exists
 
 This repo is designed as a portfolio artifact for AI enablement, business systems, support operations, product operations, and applied AI roles. It shows:
