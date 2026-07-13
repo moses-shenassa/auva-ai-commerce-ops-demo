@@ -9,7 +9,7 @@ This repository is not the private production workspace. It is a sanitized demo 
 ## At A Glance
 
 - **Domain:** e-commerce support operations, fulfillment, refunds, customer trust
-- **Pattern:** context bundle -> intent classification -> policy/risk check -> action recommendation -> human approval
+- **Pattern:** context bundle -> AI intent classification -> policy/risk check -> action recommendation -> human approval
 - **Proof:** synthetic evaluation scoreboard, unit tests, CLI demo, GitHub Actions CI
 - **Safety stance:** no live data, no external sends, no secrets, no customer records
 - **Built for:** AI implementation, AI enablement, product operations, support operations, business systems, and workflow automation roles
@@ -19,14 +19,14 @@ This repository is not the private production workspace. It is a sanitized demo 
 AUVA models a merchant-facing AI operations layer for commerce teams. The demo focuses on a narrow but realistic wedge:
 
 - assemble support context from synthetic customer, order, product, and policy data
-- classify support intent
+- classify support intent with an optional live OpenAI interpretation layer
 - choose a safe business action
 - assign a human-review approval tier
 - produce a short operator-facing recommendation and customer reply draft
 
 The key idea is not "AI writes emails." The key idea is a supervised operating loop that sees commerce truth, sees conversations, remembers policy, and helps a human operator move work safely.
 
-This version uses deterministic Python logic so the repo can run anywhere without API keys. In production, the same boundary would support LLM-assisted context interpretation and drafting behind the same approval and evaluation gates.
+This version includes a live OpenAI classification path when `OPENAI_API_KEY` is present, with deterministic offline fallback so the repo can still run anywhere during an interview. The business action and approval gates remain deterministic by design, so AI interpretation cannot silently auto-approve refunds, replacements, or risky fulfillment changes.
 
 ## Why This Exists
 
@@ -45,7 +45,7 @@ This repo is designed as a portfolio artifact for AI enablement, business system
 ```text
 Synthetic support case
   -> context bundle
-  -> intent classification
+  -> AI intent classification
   -> policy and risk check
   -> recommended action
   -> approval tier
@@ -71,6 +71,14 @@ make demo
 
 Then point to `docs/interview_demo.md` for the short talk track.
 
+To exercise the live AI path:
+
+```bash
+OPENAI_API_KEY=... AUVA_AI_MODE=auto make demo
+```
+
+If no API key is present, AUVA prints `Classifier: offline_rules` and uses the deterministic fallback. When the OpenAI path is used, it prints `Classifier: openai`.
+
 ## Example Output
 
 ```text
@@ -79,6 +87,7 @@ Intent: tracking_delay
 Action: tracking_investigation
 Approval: review_required
 Confidence: 0.81
+Classifier: offline_rules
 
 Operator note:
 Customer is asking about a delayed paid order. Order is in transit and beyond the expected delivery window. Recommend checking tracking, acknowledging the delay, and offering follow-up if the carrier status does not move.
@@ -101,6 +110,7 @@ The point of this scoreboard is not to claim production model performance. It sh
 
 - `auva_demo/` - small Python package for the demo workflow
 - `data/synthetic_cases.jsonl` - public-safe synthetic support cases
+- `docs/ai_integration.md` - live AI classifier design and fallback notes
 - `docs/architecture.md` - architecture and design notes
 - `docs/ci-cd.md` - CI/CD and quality gate notes
 - `docs/evaluation.md` - synthetic evaluation plan and public scoreboard language
@@ -131,7 +141,7 @@ All demo data is synthetic.
 
 ## Suggested LinkedIn / Resume Wording
 
-Built AUVA, a public-safe AI commerce-operations demo showing support triage, context-bundle assembly, policy-aware action routing, human-review approvals, synthetic evaluation, unit-tested guardrails, and GitHub Actions CI.
+Built AUVA, a public-safe AI commerce-operations demo showing support triage, context-bundle assembly, optional OpenAI intent classification, policy-aware action routing, human-review approvals, synthetic evaluation, unit-tested guardrails, and GitHub Actions CI.
 
 ## Status
 

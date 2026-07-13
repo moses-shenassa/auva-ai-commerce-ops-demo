@@ -9,7 +9,7 @@ AUVA is a public-safe version of a commerce operations assistant. The demo is in
 The important product pattern is not "AI writes emails." It is a supervised operating loop:
 
 ```text
-message -> context bundle -> intent -> policy/risk -> action -> approval
+message -> context bundle -> AI intent -> policy/risk -> action -> approval
 ```
 
 That pattern matters because support operations touch money, fulfillment, customer trust, and policy exceptions. The system should help an operator move faster without pretending every generated answer is safe to send.
@@ -31,6 +31,8 @@ python3 -m unittest discover -s tests
 ## What To Point Out
 
 - The demo runs locally with no API keys, databases, network calls, or private data.
+- If `OPENAI_API_KEY` is present, the intent classification can run through OpenAI and print `Classifier: openai`.
+- If no key is present, the same workflow uses `Classifier: offline_rules` so the screen-share demo stays reliable.
 - The workflow separates recommendation from external action.
 - Risk flags push delayed shipments, refunds, replacements, and post-fulfillment address changes into human review.
 - The synthetic evaluation file contains expected behavior, not just input samples.
@@ -40,8 +42,10 @@ python3 -m unittest discover -s tests
 
 Use this phrasing:
 
-> I built this as a public-safe demo of the implementation pattern behind AUVA. The private system worked with real commerce context, but this repo uses synthetic data so I can show the workflow without exposing customer records. What I want to show here is the operating discipline: context assembly, policy-aware routing, human approval, repeatable tests, and CI.
+> I built this as a public-safe demo of the implementation pattern behind AUVA. The private system worked with real commerce context, but this repo uses synthetic data so I can show the workflow without exposing customer records. The current demo has an optional OpenAI classifier for support intent, while the action and approval rules stay deterministic. What I want to show here is the operating discipline: context assembly, AI interpretation, policy-aware routing, human approval, repeatable tests, and CI.
 
 ## Avoid Overclaiming
 
 Do not call this a production app by itself. It is a runnable portfolio demo that preserves the product pattern and safety posture of the larger AUVA work.
+
+Do not imply that the model is allowed to approve refunds or replacements. The model classifies intent; the guardrails decide what requires review.

@@ -23,6 +23,8 @@ Action = Literal[
 
 Approval = Literal["auto_draft", "review_required", "manager_review"]
 
+ClassificationSource = Literal["openai", "offline_rules"]
+
 
 @dataclass(frozen=True)
 class Case:
@@ -55,6 +57,7 @@ class Decision:
     action: Action
     approval: Approval
     confidence: float
+    classification_source: ClassificationSource
     operator_note: str
     reply_draft: str
     risk_flags: tuple[str, ...]

@@ -1,5 +1,7 @@
 import unittest
+from unittest.mock import patch
 
+from auva_demo.ai import IntentClassification
 from auva_demo.models import Case
 from auva_demo.workflow import evaluate_case, load_cases
 from scripts.evaluate_demo import score
@@ -92,6 +94,58 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(decision.intent, "product_question")
         self.assertEqual(decision.action, "draft_reply")
         self.assertEqual(decision.approval, "auto_draft")
+
+    def test_live_ai_classifier_can_drive_intent_inside_policy_guardrails(self):
+        case = Case(
+            case_id="x",
+            message="This arrived shattered in the box.",
+            order_status="open",
+            payment_status="paid",
+            fulfillment_status="fulfilled",
+            carrier_status="delivered",
+            days_since_fulfillment=2,
+            customer_tier="new",
+            product_type="physical_goods",
+            policy_hint="standard",
+        )
+
+        with patch(
+            "auva_demo.workflow.classify_intent_with_openai",
+            return_value=IntentClassification(
+                intent="damaged_item",
+                confidence=0.91,
+                source="openai",
+                rationale="Customer reports breakage on arrival.",
+            ),
+        ):
+            decision = evaluate_case(case)
+
+        self.assertEqual(decision.intent, "damaged_item")
+        self.assertEqual(decision.action, "replace_item")
+        self.assertEqual(decision.approval, "review_required")
+        self.assertEqual(decision.confidence, 0.91)
+        self.assertEqual(decision.classification_source, "openai")
+
+    def test_offline_fallback_remains_available_without_ai(self):
+        case = Case(
+            case_id="x",
+            message="I want a refund.",
+            order_status="open",
+            payment_status="paid",
+            fulfillment_status="fulfilled",
+            carrier_status="delivered",
+            days_since_fulfillment=4,
+            customer_tier="new",
+            product_type="physical_goods",
+            policy_hint="standard",
+        )
+
+        with patch("auva_demo.workflow.classify_intent_with_openai", return_value=None):
+            decision = evaluate_case(case)
+
+        self.assertEqual(decision.intent, "refund_request")
+        self.assertEqual(decision.action, "refund_review")
+        self.assertEqual(decision.classification_source, "offline_rules")
 
 
 if __name__ == "__main__":

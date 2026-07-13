@@ -4,8 +4,9 @@ import json
 from pathlib import Path
 from typing import Iterable
 
+from .ai import IntentClassification, classify_intent_with_openai
 from .context import build_context
-from .models import Case, Decision
+from .models import Case, ContextBundle, Decision
 from .routing import approval_tier, choose_action, classify_intent, confidence_score
 
 
@@ -22,16 +23,17 @@ def load_cases(path: str | Path) -> list[Case]:
 
 def evaluate_case(case: Case) -> Decision:
     context = build_context(case)
-    intent = classify_intent(case.message)
+    classification = _classify_case(case, context)
+    intent = classification.intent
     action = choose_action(intent, context)
     approval = approval_tier(action, context)
-    confidence = confidence_score(intent, context)
     return Decision(
         case_id=case.case_id,
         intent=intent,
         action=action,
         approval=approval,
-        confidence=confidence,
+        confidence=classification.confidence,
+        classification_source=classification.source,
         operator_note=_operator_note(case, intent, action, approval),
         reply_draft=_reply_draft(case, intent, action, approval),
         risk_flags=context.risk_flags,
@@ -40,6 +42,20 @@ def evaluate_case(case: Case) -> Decision:
 
 def evaluate_cases(cases: Iterable[Case]) -> list[Decision]:
     return [evaluate_case(case) for case in cases]
+
+
+def _classify_case(case: Case, context: ContextBundle) -> IntentClassification:
+    ai_classification = classify_intent_with_openai(case.message, context)
+    if ai_classification is not None:
+        return ai_classification
+
+    intent = classify_intent(case.message)
+    return IntentClassification(
+        intent=intent,
+        confidence=confidence_score(intent, context),
+        source="offline_rules",
+        rationale="Offline fallback classifier used because no live AI classification was available.",
+    )
 
 
 def _operator_note(case: Case, intent: str, action: str, approval: str) -> str:

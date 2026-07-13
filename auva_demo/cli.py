@@ -16,6 +16,7 @@ def main() -> None:
         print(f"Action: {decision.action}")
         print(f"Approval: {decision.approval}")
         print(f"Confidence: {decision.confidence:.2f}")
+        print(f"Classifier: {decision.classification_source}")
         if decision.risk_flags:
             print(f"Risk flags: {', '.join(decision.risk_flags)}")
         print("\nOperator note:")

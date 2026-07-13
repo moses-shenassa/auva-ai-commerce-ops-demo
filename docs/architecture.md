@@ -9,9 +9,11 @@ flowchart LR
     A[Synthetic support message] --> B[Context bundle]
     C[Synthetic order facts] --> B
     D[Synthetic product and policy hints] --> B
-    B --> E[Intent classifier]
+    B --> E[AI intent classifier]
+    E -. no key / API failure .-> R[Offline rules fallback]
     B --> F[Risk and policy checks]
     E --> G[Recommended business action]
+    R --> G
     F --> G
     G --> H[Approval tier]
     H --> I[Operator note]
@@ -28,6 +30,27 @@ The full AUVA concept is a commerce-anchored operating intelligence:
 4. It recommends or drafts actions under human review.
 
 The demo focuses on the smallest public-safe slice: post-purchase support triage.
+
+## AI Integration Boundary
+
+The public demo includes an OpenAI-backed intent classifier in `auva_demo/ai.py`.
+When `OPENAI_API_KEY` is available and `AUVA_AI_MODE` is not set to `offline`,
+AUVA asks the model for structured JSON:
+
+- `intent`
+- `confidence`
+- `rationale`
+
+The model is allowed to classify the support case, but it is not allowed to pick
+money-moving or fulfillment-changing outcomes directly. Those remain in the
+deterministic policy layer:
+
+- `choose_action`
+- `approval_tier`
+- risk flag generation
+
+That split is intentional. AI interprets messy language; code enforces the
+business safety boundary.
 
 ## Why Human Review Is Central
 

@@ -7,7 +7,7 @@ Instead, it includes a small synthetic evaluation pattern that demonstrates how 
 ## How To Run The Public Scoreboard
 
 ```bash
-python scripts/evaluate_demo.py --case data/synthetic_cases.jsonl
+python3 scripts/evaluate_demo.py --case data/synthetic_cases.jsonl
 ```
 
 Expected output:
@@ -28,6 +28,8 @@ Overall field accuracy: 100%
 - refund requests require refund review and do not auto-send
 - damaged paid items route toward replacement review
 - low-risk product questions can become draft replies
+- the OpenAI classifier can drive intent classification inside deterministic policy guardrails
+- offline fallback remains available when no API key is present
 
 ## Why This Matters
 
@@ -44,6 +46,6 @@ That is the transferable implementation pattern: convert vague AI assistant beha
 
 Use public wording like this:
 
-> Built a synthetic evaluation scaffold for AUVA showing policy-aware support routing, human-review approvals, and guardrail tests for refund, replacement, address-change, tracking-delay, and product-question workflows.
+> Built a synthetic evaluation scaffold for AUVA showing AI-assisted intent classification, policy-aware support routing, human-review approvals, and guardrail tests for refund, replacement, address-change, tracking-delay, and product-question workflows.
 
 Do not publish private production scoreboard artifacts, raw real support cases, or customer-derived eval rows.
