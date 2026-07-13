@@ -55,12 +55,21 @@ Synthetic support case
 ## Quick Start
 
 ```bash
-python -m auva_demo.cli --case data/synthetic_cases.jsonl
-python scripts/evaluate_demo.py --case data/synthetic_cases.jsonl
-python -m unittest discover -s tests
+python3 scripts/interview_demo.py
+python3 -m auva_demo.cli --case data/synthetic_cases.jsonl
+python3 scripts/evaluate_demo.py --case data/synthetic_cases.jsonl
+python3 -m unittest discover -s tests
 ```
 
 No network access, API keys, databases, or external services are required.
+
+For a live interview, start with:
+
+```bash
+make demo
+```
+
+Then point to `docs/interview_demo.md` for the short talk track.
 
 ## Example Output
 
@@ -69,7 +78,7 @@ Case: delayed-delivery-001
 Intent: tracking_delay
 Action: tracking_investigation
 Approval: review_required
-Confidence: 0.84
+Confidence: 0.81
 
 Operator note:
 Customer is asking about a delayed paid order. Order is in transit and beyond the expected delivery window. Recommend checking tracking, acknowledging the delay, and offering follow-up if the carrier status does not move.
@@ -95,9 +104,12 @@ The point of this scoreboard is not to claim production model performance. It sh
 - `docs/architecture.md` - architecture and design notes
 - `docs/ci-cd.md` - CI/CD and quality gate notes
 - `docs/evaluation.md` - synthetic evaluation plan and public scoreboard language
+- `docs/interview_demo.md` - short screen-share talk track
 - `docs/public_safety.md` - what was excluded from the public portfolio version
+- `Makefile` - interview-friendly `make demo` and `make check` commands
 - `scripts/run_demo.py` - convenience runner
 - `scripts/evaluate_demo.py` - synthetic scoreboard runner
+- `scripts/interview_demo.py` - no-argument interview demo
 - `tests/` - unit tests for routing and guardrails
 - `.github/workflows/ci.yml` - GitHub Actions CI scaffold
 

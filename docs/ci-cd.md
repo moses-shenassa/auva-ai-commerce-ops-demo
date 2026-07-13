@@ -21,7 +21,7 @@ For AI implementation and enablement roles, that matters because a useful AI wor
 ## Commands Mirrored By CI
 
 ```bash
-python -m unittest discover -s tests
-python -m auva_demo.cli --case data/synthetic_cases.jsonl
-python scripts/evaluate_demo.py --case data/synthetic_cases.jsonl
+python3 -m unittest discover -s tests
+python3 -m auva_demo.cli --case data/synthetic_cases.jsonl
+python3 scripts/evaluate_demo.py --case data/synthetic_cases.jsonl
 ```
