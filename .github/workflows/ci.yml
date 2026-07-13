@@ -21,3 +21,6 @@ jobs:
 
       - name: Run demo
         run: python -m auva_demo.cli --case data/synthetic_cases.jsonl
+
+      - name: Run synthetic evaluation scoreboard
+        run: python scripts/evaluate_demo.py --case data/synthetic_cases.jsonl

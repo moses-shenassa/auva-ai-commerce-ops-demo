@@ -4,6 +4,23 @@ The production AUVA work used larger support-routing evaluation passes. This pub
 
 Instead, it includes a small synthetic evaluation pattern that demonstrates how the workflow can be tested.
 
+## How To Run The Public Scoreboard
+
+```bash
+python scripts/evaluate_demo.py --case data/synthetic_cases.jsonl
+```
+
+Expected output:
+
+```text
+AUVA synthetic evaluation
+Cases: 5
+Intent accuracy: 5/5
+Action accuracy: 5/5
+Approval accuracy: 5/5
+Overall field accuracy: 100%
+```
+
 ## What The Tests Cover
 
 - delayed orders route to `tracking_investigation`
@@ -11,6 +28,17 @@ Instead, it includes a small synthetic evaluation pattern that demonstrates how 
 - refund requests require refund review and do not auto-send
 - damaged paid items route toward replacement review
 - low-risk product questions can become draft replies
+
+## Why This Matters
+
+The evaluation target is behavioral reliability, not demo theater. The important checks are:
+
+- risky money-movement paths do not auto-send
+- post-fulfillment address changes are escalated
+- product questions can be drafted without pretending they are already sent
+- support recommendations are tied to order, payment, fulfillment, and policy facts
+
+That is the transferable implementation pattern: convert vague AI assistant behavior into testable workflow expectations.
 
 ## Public Scoreboard Language
 

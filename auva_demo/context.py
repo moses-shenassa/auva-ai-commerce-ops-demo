@@ -17,6 +17,8 @@ def build_context(case: Case) -> ContextBundle:
 
     if case.payment_status != "paid":
         risk_flags.append("payment_not_confirmed")
+    if case.carrier_status == "in_transit_delayed" or case.days_since_fulfillment >= 8:
+        risk_flags.append("shipment_delay_over_threshold")
     if "address" in case.message.lower() and case.fulfillment_status == "fulfilled":
         risk_flags.append("address_change_after_fulfillment")
     if "refund" in case.message.lower():

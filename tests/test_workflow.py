@@ -2,6 +2,7 @@ import unittest
 
 from auva_demo.models import Case
 from auva_demo.workflow import evaluate_case, load_cases
+from scripts.evaluate_demo import score
 
 
 class WorkflowTests(unittest.TestCase):
@@ -9,6 +10,14 @@ class WorkflowTests(unittest.TestCase):
         cases = load_cases("data/synthetic_cases.jsonl")
         self.assertEqual(len(cases), 5)
         self.assertEqual(cases[0].case_id, "delayed-delivery-001")
+        self.assertEqual(cases[0].expected_action, "tracking_investigation")
+
+    def test_synthetic_scorecard_is_green(self):
+        cases = load_cases("data/synthetic_cases.jsonl")
+        scorecard = score(cases, [evaluate_case(case) for case in cases])
+        self.assertEqual(scorecard.intent_hits, 5)
+        self.assertEqual(scorecard.action_hits, 5)
+        self.assertEqual(scorecard.approval_hits, 5)
 
     def test_delayed_delivery_routes_to_tracking_investigation(self):
         case = Case(
@@ -26,7 +35,8 @@ class WorkflowTests(unittest.TestCase):
         decision = evaluate_case(case)
         self.assertEqual(decision.intent, "tracking_delay")
         self.assertEqual(decision.action, "tracking_investigation")
-        self.assertIn(decision.approval, {"auto_draft", "review_required"})
+        self.assertEqual(decision.approval, "review_required")
+        self.assertIn("shipment_delay_over_threshold", decision.risk_flags)
 
     def test_address_change_after_fulfillment_requires_review(self):
         case = Case(

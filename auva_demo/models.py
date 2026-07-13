@@ -36,6 +36,9 @@ class Case:
     customer_tier: str
     product_type: str
     policy_hint: str
+    expected_intent: Intent | None = None
+    expected_action: Action | None = None
+    expected_approval: Approval | None = None
 
 
 @dataclass(frozen=True)
